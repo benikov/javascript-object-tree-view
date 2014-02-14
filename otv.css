@@ -1,0 +1,73 @@
+/* OBJECT TREE */
+ul.json-tree, ul.json-tree ul{
+    list-style-type:none;
+    padding-left:26px;
+    padding-top:10px;
+    overflow:hidden;
+    height:0;
+    color:#222;
+}
+
+ul.json-tree{height:auto;}
+
+ul.json-tree li{
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+ul.json-tree .clearall{
+    clear:both;
+}
+
+ul.json-tree span.caption{
+    float:left;
+    margin-left:4px;
+    font-size:20px;
+    line-height:18px;
+}
+
+ul.json-tree span.key, span.value{
+    font-size:20px;
+    line-height:12px;
+    margin-left:4px;
+}
+
+ul.json-tree .label{
+    font-size: 20px;
+    font-weight: bold;
+    float: left;
+    line-height: 18px;
+    margin-left: 6px;
+}
+
+ul.json-tree .label.field{
+    width:18px;
+    height:18px;
+    font-size:14px;
+    text-align:center;
+    margin-left:0;
+}
+
+ul.json-tree .node{
+    float: left;
+    font-size: 18px;
+    width: 14px;
+    height: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    text-align: center;
+    cursor: pointer;
+    padding: 2px;
+}
+
+ul.json-tree .node:hover{
+    color:gray;
+}
+
+/* figures color customization */
+ul.json-tree .label.boolean{color:#AEB404;}
+ul.json-tree .label.number{color:#21610B;}
+ul.json-tree .label.array{}
+ul.json-tree .label.object{}
+ul.json-tree .label.string{}
+ul.json-tree .label.null{color: maroon;}

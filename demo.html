@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>javascript object viewer</title>
+    <link rel="stylesheet" href="otv.css" />
+    <!-- 
+	 person.js contain "person" object,
+	 intended for example 
+    -->
+    <script src="person.js"></script>
+    <script defer="true" src="otv.js"></script>
+    <!-- templates for object tree -->
+    <script type="text/html" id="otv_object">
+      <a class="node closed">&#9655;</a>
+      <div class="label {{=class}}">
+	{{=icon}}
+      </div>
+      <span class="caption">{{=caption}}</span>
+      <div class="clearall">
+	<ul></ul>
+    </script>
+    <script type="test/html" id="otv_field">
+	 <div class="label field {{=class}}">
+	   {{=icon}}
+	 </div>
+	 <span class="key">{{=key}}</span> :
+	 <span class="value">{{=value}}</span>
+    </script>
+    <script>
+      window.addEventListener('load', function(){
+      var tree = document.querySelector("ul.json-tree");
+      objectTreeView.expand("Object", person, tree);
+      });
+    </script>
+  </head>
+  <body>
+    <ul class="json-tree"></ul>     
+  </body>
+</html>
