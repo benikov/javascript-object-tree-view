@@ -1,23 +1,23 @@
 /**
-* JavaScript object viewer simple implementation.
-* Browsers compatibility: written in chrome, tested in safari,
-* i hope, this works in other browsers also.
-* Written by me.
+* JavaScript object viewer light implementation.
+* Browsers compatibility: all major browsers.
+* Written by Igor Benikov.
 */
 var objectTreeView = (function(){
     
     'use strict';
     
-    var treeEl,
-    objectTemplate = document.getElementById("otv_object").innerHTML,
-    fieldTemplate = document.getElementById("otv_field").innerHTML,
+    var containerEl,
+    treeEl = document.createElement("ul"),
+    objectTemplate = '<a class="node closed">&#9655;</a><div class="label {{=class}}">{{=icon}}</div><span class="caption">{{=caption}}</span><div class="clearall"><ul></ul>',
+    fieldTemplate = '<div class="label field {{=class}}">{{=icon}}</div><span class="key">{{=key}}</span> :<span class="value">{{=value}}</span>',
     templates = {"object" : objectTemplate,"field" : fieldTemplate},
     figures = {
 	RIGHT_ARROW: "&#9655;",
 	DOWN_ARROW:"&#9661;",
 	RECTANGLE: "&#9635;",
 	OBJECT: "{ }",
-	ARRAY: '[ ]'
+	ARRAY: "[ ]"
     },
     dataTypes = {
 	"string":{"template":"field", "icon" : figures.RECTANGLE},
@@ -47,7 +47,7 @@ var objectTreeView = (function(){
     },
 
     /**
-     * Loop in json object and create tree nodes.
+     * Loop in object and create tree nodes.
      * Calls recursive.
      */
     createNode = function(key, node, parent){
@@ -57,7 +57,7 @@ var objectTreeView = (function(){
 	tmpl = templates[dataTypes[nodeType]["template"]],
 	subParent, i;
 
-	//add quotes to string showing
+	//add quotes to string
 	if(nodeType == "string"){
 	    node = "\"" + node + "\"";
 	}
@@ -86,7 +86,7 @@ var objectTreeView = (function(){
 	parent.appendChild(el);
 
 	//if node is object or array - loop
-	//in node and call createNode function.
+	//therein  and call to createNode function.
 	if(nodeType == 'object'){
 	    for(i in node){
 		createNode(i, node[i], subParent);
@@ -98,43 +98,47 @@ var objectTreeView = (function(){
 	}
     },
 
+    expand = function(key, value, container){
+	
+	if(!containerEl){
+
+	    containerEl = container;
+	    containerEl.appendChild(treeEl);
+	}
+	
+	treeEl.innerHTML = "";
+	createNode(key, value, treeEl);
+    };
+
+    treeEl.className = "json-tree";
+
     /**
      * Single "click" event listener for tree.
      * If clicked element is node -
-     * toggle node.
+     * toggle its.
      */
-    initEvents = function(){
+    treeEl.addEventListener('click', function(e){
+	var el = e.target,  ul;
 
-	treeEl.addEventListener('click', function(e){
-	    var el = e.target,  ul;
-
-	    if(el && el.className && ~el.className.indexOf("node")){
-		
-		if(el.parentNode.className == "json-tree"){//top level
-		    ul = el.parentNode;
-		}else{
-		    ul = el.parentNode.querySelector("ul");
-		}
-		
-		if(~el.className.indexOf("opened")){
-		    ul.style.height = 0;
-		    el.className = "node closed";
-		    el.innerHTML = figures.RIGHT_ARROW;
-		}else{
-		    ul.style.height = "auto";
-		    el.className = "node opened";
-		    el.innerHTML = figures.DOWN_ARROW;
-		}
+	if(el && el.className && ~el.className.indexOf("node")){
+	    
+	    if(el.parentNode === treeEl){//top level
+		ul = el.parentNode;
+	    }else{
+		ul = el.parentNode.querySelector("ul");
 	    }
-	});
-    },
-
-    expand = function(key, value, el){
-	treeEl = el;
-	el.innerHTML = "";
-	initEvents();
-	createNode(key, value, el);
-    };
+	    
+	    if(~el.className.indexOf("opened")){
+		ul.style.height = 0;
+		el.className = "node closed";
+		el.innerHTML = figures.RIGHT_ARROW;
+	    }else{
+		ul.style.height = "auto";
+		el.className = "node opened";
+		el.innerHTML = figures.DOWN_ARROW;
+	    }
+	}
+    });
 
     return {"expand": expand};
 }());
