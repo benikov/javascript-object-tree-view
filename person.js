@@ -5,7 +5,10 @@ var person = {
     "married" : true,
     "age": 39,
     "hobbies":null,
-    
+    "consoleLog":console.log,
+    "getAddresses" : function(){
+	console.log(this.addresses);
+    },
     "addresses":[
 	
 	{
