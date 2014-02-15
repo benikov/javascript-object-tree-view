@@ -1,144 +1,66 @@
-/**
-* JavaScript object viewer light implementation.
-* Browsers compatibility: all major browsers.
-* Written by Igor Benikov.
-*/
-var objectTreeView = (function(){
-    
-    'use strict';
-    
-    var containerEl,
-    treeEl = document.createElement("ul"),
-    objectTemplate = '<a class="node closed">&#9655;</a><div class="label {{=class}}">{{=icon}}</div><span class="caption">{{=caption}}</span><div class="clearall"><ul></ul>',
-    fieldTemplate = '<div class="label field {{=class}}">{{=icon}}</div><span class="key">{{=key}}</span> :<span class="value">{{=value}}</span>',
-    templates = {"object" : objectTemplate,"field" : fieldTemplate},
-    figures = {
-	RIGHT_ARROW: "&#9655;",
-	DOWN_ARROW:"&#9661;",
-	RECTANGLE: "&#9635;",
-	OBJECT: "{ }",
-	ARRAY: "[ ]"
-    },
-    dataTypes = {
-	"string":{"template":"field", "icon" : figures.RECTANGLE},
-	"number":{"template":"field", "icon" : figures.RECTANGLE},
-	"boolean":{"template":"field", "icon" : figures.RECTANGLE},
-	"array":{"template":"object", "icon" : figures.ARRAY},
-	"object":{"template":"object", "icon" : figures.OBJECT},
-	"null":{"template":"field", "icon" : figures.RECTANGLE},
-	"undefined":{"template":"field", "icon" : figures.RECTANGLE}
-    },
+var person = {
 
-    template = function(s, params){
+    "name": "Igor",
+    "phone": "050-0000000",
+    "married" : true,
+    "age": 39,
+    "hobbies":null,
+    "consoleLog":console.log,
+    "getAddresses" : function(){
+	console.log(this.addresses);
+    },
+    "addresses":[
 	
-	var i, r;
+	{
 	
-	for(i in params){
+	    "country" : "Israel",
+	    "city": "Hadera",
+	    "street":"Bialik",
+	    "building":29,
+	    "isPrimary":false
+	},
 
-	    r = new RegExp('{{=' + i + '}}', 'g');
-	    s = s.replace(r, params[i]);
-	}
-
-	return s;
-    },
-
-    getType = function(obj) {
-	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
-    },
-
-    /**
-     * Loop in object and create tree nodes.
-     * Calls recursive.
-     */
-    createNode = function(key, node, parent){
-
-	var nodeType = getType(node),
-	el = document.createElement("li"),
-	tmpl = templates[dataTypes[nodeType]["template"]],
-	subParent, i;
-
-	//add quotes to string
-	if(nodeType == "string"){
-	    node = "\"" + node + "\"";
-	}
-
-	//create node and append to parent
-	if(nodeType == "object" || nodeType == "array"){
-
-	    el.innerHTML = template(tmpl,{
-		"icon": dataTypes[nodeType]["icon"],
-		"caption":key,
-		"class":nodeType});
-
-	    //using in createNode recursive calls.
-	    subParent = el.querySelector("ul");
-
-	}else{
-
-	    el.innerHTML = template(tmpl,{
-		"icon": dataTypes[nodeType]["icon"],
-		"key":key,
-		"value": node,
-		"class":nodeType
-	    });
-	}
-
-	parent.appendChild(el);
-
-	//if node is object or array - loop
-	//therein  and call to createNode function.
-	if(nodeType == 'object'){
-	    for(i in node){
-		createNode(i, node[i], subParent);
-	    }
-	}else if(nodeType == "array"){
-	    for(i = 0; i < node.length; i++){
-		createNode(i, node[i], subParent);
-	    }
-	}
-    },
-
-    expand = function(key, value, container){
+	{
 	
-	if(!containerEl){
+	    "country" : "Israel",
+	    "city": "Haifa",
+	    "street":"Ben-Gurion",
+	    "building":132,
+	    "isPrimary":true
+	},
 
-	    containerEl = container;
-	    containerEl.appendChild(treeEl);
-	}
+
+    ],
+
+    "childs": [
 	
-	treeEl.innerHTML = "";
-	createNode(key, value, treeEl);
-    };
-
-    treeEl.className = "json-tree";
-
-    /**
-     * Single "click" event listener for tree.
-     * If clicked element is node -
-     * toggle its.
-     */
-    treeEl.addEventListener('click', function(e){
-	var el = e.target,  ul;
-
-	if(el && el.className && ~el.className.indexOf("node")){
+	{
+	    "name": "Denis",
+	    "age":12,
+	    "addresses":[{
+		
+		"country" : "Israel",
+		"city": "Hadera",
+		"street":"Bialik",
+		"building":29,
+		"isPrimary":true
+	    }],
 	    
-	    if(el.parentNode === treeEl){//top level
-		ul = el.parentNode;
-	    }else{
-		ul = el.parentNode.querySelector("ul");
-	    }
-	    
-	    if(~el.className.indexOf("opened")){
-		ul.style.height = 0;
-		el.className = "node closed";
-		el.innerHTML = figures.RIGHT_ARROW;
-	    }else{
-		ul.style.height = "auto";
-		el.className = "node opened";
-		el.innerHTML = figures.DOWN_ARROW;
-	    }
-	}
-    });
+	},
 
-    return {"expand": expand};
-}());
+	{
+	    "name": "Buddha",
+	    "age":4,
+	    "addresses":[{
+		
+		"country" : "Israel",
+		"city": "Hadera",
+		"street":"Bialik",
+		"building":29,
+		"isPrimary":true
+	    }],
+	    
+	}
+	
+    ]
+};
